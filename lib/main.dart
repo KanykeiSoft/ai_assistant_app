@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'register_page.dart';
 
 // ===== Palette =====
 const Color kBg = Color(0xFFF3F4F6);      // light gray background
@@ -66,8 +67,8 @@ class WelcomePage extends StatelessWidget {
               const Spacer(),
 
               // ===== Title + subtitle (NO white card) =====
-              Column(
-                children: const [
+              const Column(
+                children: [
                   Text(
                     'Life Assistant',
                     textAlign: TextAlign.center,
@@ -97,7 +98,9 @@ class WelcomePage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO: navigate to LoginPage later
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kPrimary,
                     foregroundColor: Colors.white,
@@ -119,7 +122,14 @@ class WelcomePage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const RegisterPage(),
+                      ),
+                    );
+                  },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: kPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
