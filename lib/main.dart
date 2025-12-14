@@ -1,156 +1,30 @@
 import 'package:flutter/material.dart';
-import 'register_page.dart';
-
-// ===== Palette =====
-const Color kBg = Color(0xFFF3F4F6);      // light gray background
-const Color kText = Color(0xFF111827);    // almost black
-const Color kMuted = Color(0xFF6B7280);   // muted gray
-const Color kPrimary = Color(0xFF5A8F3E); // calm green
-const Color kSurface = Colors.white;
+import 'app_colors.dart';
+import 'welcome_page.dart';
 
 void main() {
-  runApp(const LifeAssistantApp());
+  runApp(const MyApp());
 }
 
-// ===== App root =====
-class LifeAssistantApp extends StatelessWidget {
-  const LifeAssistantApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'AI Assistant',
       debugShowCheckedModeBanner: false,
-      title: 'Life Assistant',
-
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         useMaterial3: true,
-        scaffoldBackgroundColor: kBg,
-
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: kPrimary,
-          brightness: Brightness.light,
-        ).copyWith(
-          primary: kPrimary,
-          surface: kSurface,
-        ),
-
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(
-            fontSize: 36,
-            fontWeight: FontWeight.w800,
-            color: kText,
-          ),
-          bodyMedium: TextStyle(
-            fontSize: 16,
-            color: kMuted,
-          ),
+        scaffoldBackgroundColor: AppColors.bg,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
         ),
       ),
-
       home: const WelcomePage(),
     );
   }
 }
-
-// ===== Welcome Screen =====
-class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              const Spacer(),
-
-              // ===== Title + subtitle (NO white card) =====
-              const Column(
-                children: [
-                  Text(
-                    'Life Assistant',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w800,
-                      color: kPrimary,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Plan your day.\nTrack habits.\nChat with AI.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      height: 1.5,
-                      color: kMuted,
-                    ),
-                  ),
-                ],
-              ),
-
-              const Spacer(),
-
-              // ===== LOGIN BUTTON =====
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: navigate to LoginPage later
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kPrimary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: const Text(
-                    'Log in',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // ===== CREATE ACCOUNT BUTTON =====
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const RegisterPage(),
-                      ),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: kPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    side: const BorderSide(color: kPrimary),
-                  ),
-                  child: const Text(
-                    'Create account',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
