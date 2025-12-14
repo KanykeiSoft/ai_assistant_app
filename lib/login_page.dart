@@ -1,79 +1,76 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'services/auth_service.dart';
+import 'register_page.dart';
+import 'main_page.dart'; // Assuming we have this or will create it
 
-
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _auth = AuthService();
 
-
-  final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
-  final _confirmCtrl = TextEditingController();
 
   bool _loading = false;
   bool _obscurePass = true;
-  bool _obscureConfirm = true;
 
   @override
   void dispose() {
-    _nameCtrl.dispose();
     _emailCtrl.dispose();
     _passCtrl.dispose();
-    _confirmCtrl.dispose();
     super.dispose();
   }
-Future<void> _submit() async {
-  FocusScope.of(context).unfocus();
 
-  if (!_formKey.currentState!.validate()) return;
+  Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
 
-  setState(() => _loading = true);
+    if (!_formKey.currentState!.validate()) return;
 
-  try {
-    final timezone = DateTime.now().timeZoneName; // например: EST / EDT
+    setState(() => _loading = true);
 
-    await _auth.register(
-      name: _nameCtrl.text.trim(),
-      email: _emailCtrl.text.trim(),
-      password: _passCtrl.text,
-      timezone: timezone,
-    );
+    try {
+      await _auth.login(
+        email: _emailCtrl.text.trim(),
+        password: _passCtrl.text,
+      );
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Account created ✅")),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Welcome back! 👋")),
+      );
 
-    Navigator.pop(context);
-  } catch (e) {
-    if (!mounted) return;
+      // Navigate to Main Page (home)
+      // For now, we'll just push replacement
+       Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const MainPage()), // or whatever the home is
+        (route) => false,
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Register error: $e")),
-    );
-  } finally {
-    if (mounted) setState(() => _loading = false);
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login error: $e")),
+      );
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
-}
 
   InputDecoration _decoration({
     required String label,
     String? hint,
     Widget? suffixIcon,
   }) {
-    // Важно: базовые стили уже задаются в ThemeData (main.dart),
-    // здесь мы только добавляем label/hint/suffix.
     return InputDecoration(
       labelText: label,
       hintText: hint,
@@ -84,11 +81,8 @@ Future<void> _submit() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor НЕ задаём — берётся из ThemeData (AppColors.bg)
       appBar: AppBar(
-        // AppBar стиль тоже лучше оставить темой,
-        // тут только title
-        title: const Text("Create account"),
+        title: const Text("Log In"),
       ),
       body: SafeArea(
         child: Center(
@@ -101,7 +95,7 @@ Future<void> _submit() async {
                 children: [
                   const SizedBox(height: 8),
                   Text(
-                    "Welcome ",
+                    "Welcome Back",
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w800,
@@ -110,14 +104,14 @@ Future<void> _submit() async {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Create your account to start tracking habits and planning your day.",
+                    "Sign in to continue tracking your habits.",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.secondary.withValues(alpha: 0.85),
                           height: 1.4,
                         ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 32),
 
                   // Card container
                   Container(
@@ -138,22 +132,6 @@ Future<void> _submit() async {
                       child: Column(
                         children: [
                           TextFormField(
-                            controller: _nameCtrl,
-                            textInputAction: TextInputAction.next,
-                            decoration: _decoration(
-                              label: "Full name",
-                              hint: "e.g. Aidar K.",
-                            ),
-                            validator: (v) {
-                              final value = (v ?? "").trim();
-                              if (value.isEmpty) return "Please enter your name";
-                              if (value.length < 2) return "Name is too short";
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 12),
-
-                          TextFormField(
                             controller: _emailCtrl,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
@@ -164,20 +142,17 @@ Future<void> _submit() async {
                             validator: (v) {
                               final value = (v ?? "").trim();
                               if (value.isEmpty) return "Please enter your email";
-                              final emailOk = RegExp(r'^\S+@\S+\.\S+$').hasMatch(value);
-                              if (!emailOk) return "Enter a valid email";
                               return null;
                             },
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
 
                           TextFormField(
                             controller: _passCtrl,
                             obscureText: _obscurePass,
-                            textInputAction: TextInputAction.next,
+                            textInputAction: TextInputAction.done,
                             decoration: _decoration(
                               label: "Password",
-                              hint: "Minimum 6 characters",
                               suffixIcon: IconButton(
                                 onPressed: () =>
                                     setState(() => _obscurePass = !_obscurePass),
@@ -189,44 +164,22 @@ Future<void> _submit() async {
                             ),
                             validator: (v) {
                               final value = (v ?? "");
-                              if (value.isEmpty) return "Please enter a password";
-                              if (value.length < 6) return "Password must be at least 6 chars";
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 12),
-
-                          TextFormField(
-                            controller: _confirmCtrl,
-                            obscureText: _obscureConfirm,
-                            textInputAction: TextInputAction.done,
-                            decoration: _decoration(
-                              label: "Confirm password",
-                              suffixIcon: IconButton(
-                                onPressed: () => setState(
-                                    () => _obscureConfirm = !_obscureConfirm),
-                                icon: Icon(
-                                  _obscureConfirm ? Icons.visibility : Icons.visibility_off,
-                                  color: AppColors.secondary.withValues(alpha: 0.75),
-                                ),
-                              ),
-                            ),
-                            validator: (v) {
-                              final value = (v ?? "");
-                              if (value.isEmpty) return "Please confirm your password";
-                              if (value != _passCtrl.text) return "Passwords do not match";
+                              if (value.isEmpty) return "Please enter your password";
                               return null;
                             },
                             onFieldSubmitted: (_) => _loading ? null : _submit(),
                           ),
-
-                          const SizedBox(height: 18),
+                          
+                          const SizedBox(height: 24),
 
                           SizedBox(
                             height: 52,
                             width: double.infinity,
                             child: ElevatedButton(
-                              // ❗ стиль НЕ задаём — берётся из общего Theme
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary, // Explicitly using the user requested color
+                                foregroundColor: Colors.white,
+                              ),
                               onPressed: _loading ? null : _submit,
                               child: _loading
                                   ? const SizedBox(
@@ -238,7 +191,7 @@ Future<void> _submit() async {
                                       ),
                                     )
                                   : const Text(
-                                      "Create account",
+                                      "Log In",
                                       style: TextStyle(fontWeight: FontWeight.w700),
                                     ),
                             ),
@@ -251,9 +204,14 @@ Future<void> _submit() async {
                   const SizedBox(height: 16),
 
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const RegisterPage()),
+                      );
+                    },
                     child: Text(
-                      "Already have an account? Log in",
+                      "Don't have an account? Create one",
                       style: TextStyle(
                         color: AppColors.accent,
                         fontWeight: FontWeight.w700,
