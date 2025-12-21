@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'welcome_page.dart';
+import 'onboarding/onboarding_page.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +27,8 @@ class MyApp extends StatelessWidget {
           centerTitle: true,
         ),
       ),
-      home: const WelcomePage(),
+     home: const OnboardingPage(),
+
     );
   }
 }
