@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'services/auth_service.dart';
+import 'app_buttons.dart';
 
 
 class RegisterPage extends StatefulWidget {

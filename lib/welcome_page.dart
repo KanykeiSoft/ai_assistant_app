@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'register_page.dart';
 import 'login_page.dart';
+import 'app_buttons.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -40,8 +41,9 @@ class WelcomePage extends StatelessWidget {
 
               const Spacer(),
 
-              // Create account -> RegisterPage
+                // Create account -> RegisterPage
               ElevatedButton(
+                style: primaryGreenButtonStyle(),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -56,6 +58,7 @@ class WelcomePage extends StatelessWidget {
 
               // Log in
               OutlinedButton(
+                 style: outlinedGreenButtonStyle(),
                 onPressed: () {
                   Navigator.push(
                     context,
