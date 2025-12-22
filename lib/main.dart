@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'welcome_page.dart';
-import 'onboarding/onboarding_page.dart';
+
 
 
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           centerTitle: true,
         ),
       ),
-     home: const OnboardingPage(),
+     home: const WelcomePage(),
 
     );
   }
